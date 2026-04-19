@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import './github.css'
 import axios from 'axios'
-import { use } from 'react'
-import { normalizeModuleId } from 'vite/module-runner'
-
+import { FaMapMarkerAlt } from 'react-icons/fa'; 
+import { PiBuildingsFill } from 'react-icons/pi';
+import { FaXTwitter } from 'react-icons/fa6';
+import { FaGithub } from 'react-icons/fa';
 
 function github() {
 
@@ -48,14 +49,20 @@ function github() {
                  <a href={profile.html_url} target='_blank' className='profile-url'>@{profile.login}</a>
             <p className='profile-bio'>{profile.bio}</p> 
               <div className='profile-stats'>
-                <p className='profile-repos'>Repositories <br /> <span className='repos'>{profile.public_repos}</span></p>
-                <p className='profile-followers'>Followers <br /> <span className='follower'>{profile.followers}</span></p>
-                <p className='profile-following'>Following <br /> <span className='following'>{profile.following}</span></p>
+                <p className='profile-repos'>Repositories <br /> <span className='stats'>{profile.public_repos}</span></p>
+                <p className='profile-followers'>Followers <br /> <span className='stats'>{profile.followers}</span></p>
+                <p className='profile-following'>Following <br /> <span className='stats'>{profile.following}</span></p>
 
               </div>
+              <div className='profile-info'>
+                 <p className='location'><FaMapMarkerAlt/> {profile.location}</p>
+               <p className='company'><PiBuildingsFill/>{profile.company}</p>
+              </div>
 
-
-
+              <div className='profile-links'>
+                <a href={`https://twitter.com/${profile.twitter_username}`} className='twitter-link' target='_blank'><FaXTwitter/>{profile.twitter_username}</a>
+                <a href={profile.html_url} target='_blank' className='profileurl'> <FaGithub/> View Profile</a>
+              </div>
             </div>
            
             </div>       
