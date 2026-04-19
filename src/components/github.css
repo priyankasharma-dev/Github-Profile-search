@@ -1,0 +1,142 @@
+*{
+ margin: 0;
+ padding:0 ;
+ box-sizing: border-box;
+ font-family: "space mono", monospace;
+}
+
+body{
+    color: #fefefe;
+    background-color: #141d2f;
+    font-size: 14px;
+    width: 100%;
+    height:100vh;
+    position:relative
+}
+
+.main-container{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   gap: 50px;
+
+}
+
+.main-heading{
+    text-align: center;
+    font-size: 40px;
+    margin-top:50px;
+    padding-top: 5px;
+}
+
+.search-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-input{
+    width: 600px;
+    padding:15px 20px;
+    outline: none;
+    border: none;
+    font-size: 20px;
+    border-radius:20px;
+    background-color: #2b3d65;
+    box-shadow: 0 16px 30px -10px rgba(0,0,0,0.2);
+    color: #fefefe;
+}
+
+.search-input::placeholder{
+    color: #fefefe;
+}
+
+.search-btn{
+    width: 100px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: none;
+    outline:none;
+    text-align: center;
+    background-color: #20428a;
+    color: #fefefe;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight:700;
+    cursor: pointer;
+    box-shadow: 0 16px 30px -10px rgba(0,0,0,0.2);
+}
+
+.search-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.error-msg{
+    font-size: 20px;
+}
+
+.profile-container{
+    width:720px;
+    height: auto;
+    margin:0 auto;
+    padding:30px;
+   background: #1e2a47;
+   border-radius: 20px;
+   font-size: 15px;
+   box-shadow: 0 16px 30px -10px rgba(0,0,0,0.2);
+
+}
+
+.profile-content{
+    display: flex;
+    gap: 25px;
+    justify-content: flex-start;
+}
+.profile-image{
+    height:100%;
+}
+
+.profile-avatar{
+    width: 100px;
+    border-radius: 50%;
+    border: 2px solid #20428a;
+       box-shadow: 0 16px 30px -10px rgba(0,0,0,0.2);
+
+}
+
+.profile-details{
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-desp{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 500px;
+    gap: 100px;
+}
+
+.profile-name{
+    font-size: 30px;
+font-weight: 600;
+}
+
+.profile-url{
+    margin-top: 10px;
+color: #fefefe;
+text-decoration: none;
+}
+
+.profile-bio{
+    margin:40px 20px 20px  5px;
+    color: #b1a7a7;
+    line-height: 1.5rem;
+}
