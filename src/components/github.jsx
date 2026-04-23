@@ -1,75 +1,156 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './github.css'
 import axios from 'axios'
-import { FaMapMarkerAlt } from 'react-icons/fa'; 
+import { FaMapMarkerAlt, FaUser, FaStar, FaCodeBranch, FaBook, FaSearch, FaGithub } from 'react-icons/fa';
 import { PiBuildingsFill } from 'react-icons/pi';
 import { FaXTwitter } from 'react-icons/fa6';
-import { FaGithub } from 'react-icons/fa';
 
-function github() {
+function Github() {
 
-    const [username,setUsername] = useState('')
-    const [profile,setProfile] = useState(null)
-    const [error,setError] = useState(null)
-  const handleSubmit = async(e) => {
-  e.preventDefault();
-  try {
-    const response = await axios.get(`https://api.github.com/users/${username}`);
-    console.log(response.data)
-    setProfile(response.data)
-    setError(null)
+  const [query, setQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+  const [profile, setProfile] = useState(null)
+  const [error, setError] = useState(null)
+  const [repos, setRepos] = useState([])
+  const [loading, setLoading] = useState(false) 
+  const [history, setHistory] = useState(JSON.parse(localStorage.getItem('searchHistory')) || [])
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [query])
 
-  } catch (error) {
-    setProfile(null)
-    setError("User not found")
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setProfile(null);
+    setRepos([]);
 
-  }
+    const startTime = Date.now();
+
+    try {
+      const response = await axios.get(`https://api.github.com/users/${debouncedQuery}`);
+      const repoResponse = await axios.get(`https://api.github.com/users/${debouncedQuery}/repos?sort=stars&per_page=6`);
+
+      const elapsed = Date.now() - startTime;
+      const delay = Math.max(500 - elapsed, 0);
+      const updatedHistory = [debouncedQuery,...history].slice(0,5)
+      setHistory(updatedHistory)
+      localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
+
+      setTimeout(() => {
+        setProfile(response.data);
+        setRepos(repoResponse.data);
+        setError(null);
+        setLoading(false);
+      }, delay);
+
+    } catch (error) {
+      setTimeout(() => {
+        setProfile(null);
+        setRepos([]);
+        setError("User not found");
+        setLoading(false);
+      }, 500);
+    }
+  };
   return (
     <div className='main-container'>
-        <h1 className='main-heading'>Github Profile Detective</h1>
-        <form onSubmit={handleSubmit} className='search-form'>
-          <input type="text" placeholder='Enter Github Username' className='search-input' value={username} onChange={(e) =>{setUsername(e.target.value)}} />
-          <button className='search-btn' type='submit'>Search</button>
-        </form>
-        {error && <p className='error-msg'>{error}</p>}
-        {profile && (
-          <div className='profile-container'>
-            <div className='profile-content'>
-              <div className='profile-image'>
-              <img src={profile.avatar_url} alt="Avatar" className='profile-avatar' />
-            </div>
-            
-            <div className='profile-details'>
 
-              <div className='profile-desp'>
-               <h2  className='profile-name'>{profile.name}  </h2>
-                  <p className='profile-created'> Joined: {new Date(profile.created_at).toLocaleDateString()}  </p>
-                 </div>
-                 <a href={profile.html_url} target='_blank' className='profile-url'>@{profile.login}</a>
-            <p className='profile-bio'>{profile.bio}</p> 
-              <div className='profile-stats'>
-                <p className='profile-repos'>Repositories <br /> <span className='stats'>{profile.public_repos}</span></p>
-                <p className='profile-followers'>Followers <br /> <span className='stats'>{profile.followers}</span></p>
-                <p className='profile-following'>Following <br /> <span className='stats'>{profile.following}</span></p>
+      {/* Heading */}
+      <h1 className='main-heading'>Github Search Detective </h1>
 
-              </div>
-              <div className='profile-info'>
-                 <p className='location'><FaMapMarkerAlt/> {profile.location}</p>
-               <p className='company'><PiBuildingsFill/>{profile.company}</p>
-              </div>
-
-              <div className='profile-links'>
-                <a href={`https://twitter.com/${profile.twitter_username}`} className='twitter-link' target='_blank'><FaXTwitter/>{profile.twitter_username}</a>
-                <a href={profile.html_url} target='_blank' className='profileurl'> <FaGithub/> View Profile</a>
-              </div>
-            </div>
-           
-            </div>       
-          </div>
-        )}
+      {/* Search Bar */}
+      <div className='search-wrapper'>
+        <FaSearch className='search-icon' />
+        <input
+          type="text"
+          placeholder='Enter GitHub username to investigate...'
+          className='search-input'
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e)}
+        />
       </div>
+
+      {error && <p className='error-msg'>{error}</p>}
+
+      {profile && (
+        <div className='layout'>
+
+          <div className='left-panel'>
+
+            {/* Profile Card */}
+            <div className='profile-card'>
+              <img src={profile.avatar_url} alt="avatar" className='profile-avatar' />
+              <h2 className='profile-name'>{profile.name}</h2>
+              <a href={profile.html_url} target='_blank' className='profile-username'>@{profile.login}</a>
+              <p className='profile-bio'>{profile.bio}</p>
+
+              <div className='profile-stats'>
+                <div className='stat'>
+                  <span className='stat-number'>{profile.followers}</span>
+                  <span className='stat-label'>FOLLOWERS</span>
+                </div>
+                <div className='stat'>
+                  <span className='stat-number'>{profile.following}</span>
+                  <span className='stat-label'>FOLLOWING</span>
+                </div>
+              </div>
+
+              <div className='profile-info'>
+                {profile.location && <p><FaMapMarkerAlt /> {profile.location}</p>}
+                {profile.company && <p><PiBuildingsFill /> {profile.company}</p>}
+                {profile.twitter_username && (
+                  <a href={`https://twitter.com/${profile.twitter_username}`} target='_blank' className='twitter-link'>
+                    <FaXTwitter /> {profile.twitter_username}
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Search History */}
+            {history.length > 0 && (
+              <div className='history-card'>
+                <p className='history-heading'>SEARCH HISTORY</p>
+                {history.map((item, index) => (
+                  <div key={index} className='history-item' onClick={() => setQuery(item)}>
+                    <FaUser className='history-icon' />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+
+          </div>
+
+          <div className='right-panel'>
+            <h3 className='repos-heading'><FaBook /> Top Repositories</h3>
+            {repos.map((repo) => (
+              <a href={repo.html_url} target='_blank' key={repo.id} className='repo-card'>
+                <div className='repo-top'>
+                  <span className='repo-name'>{repo.name}</span>
+                  <span className='repo-stars'><FaStar /> {repo.stargazers_count}</span>
+                </div>
+                <p className='repo-description'>{repo.description || 'No description added'}</p>
+                <div className='repo-bottom'>
+                  <span className='repo-language'>● {repo.language || 'N/A'}</span>
+                  <span><FaCodeBranch /> {repo.forks_count}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+
+        </div>
+      )}
+
+    </div>
   )
 }
 
-export default github
+export default Github
+
+
+
