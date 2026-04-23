@@ -4,6 +4,7 @@ import axios from 'axios'
 import { FaMapMarkerAlt, FaUser, FaStar, FaCodeBranch, FaBook, FaSearch, FaGithub } from 'react-icons/fa';
 import { PiBuildingsFill } from 'react-icons/pi';
 import { FaXTwitter } from 'react-icons/fa6';
+import { FaExclamationCircle } from "react-icons/fa";
 
 function Github() {
 
@@ -12,7 +13,7 @@ function Github() {
   const [profile, setProfile] = useState(null)
   const [error, setError] = useState(null)
   const [repos, setRepos] = useState([])
-  const [loading, setLoading] = useState(false) 
+  const [loading, setLoading] = useState(false)
   const [history, setHistory] = useState(JSON.parse(localStorage.getItem('searchHistory')) || [])
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,7 +36,7 @@ function Github() {
 
       const elapsed = Date.now() - startTime;
       const delay = Math.max(500 - elapsed, 0);
-      const updatedHistory = [debouncedQuery,...history].slice(0,5)
+      const updatedHistory = [debouncedQuery, ...history].slice(0, 5)
       setHistory(updatedHistory)
       localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
 
@@ -74,8 +75,15 @@ function Github() {
         />
       </div>
 
-      {error && <p className='error-msg'>{error}</p>}
-
+      {error && (
+        <div className="error-card">
+        <FaExclamationCircle className="error-icon" />
+          <p className="error-title">No user found</p>
+          <p className="error-subtext">
+            Try checking the username or search another one.
+          </p>
+        </div>
+      )}
       {profile && (
         <div className='layout'>
 
@@ -122,7 +130,6 @@ function Github() {
                 ))}
               </div>
             )}
-            
 
           </div>
 
