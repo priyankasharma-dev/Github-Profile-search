@@ -1,16 +1,73 @@
-# React + Vite
+# GitHub Search Detective
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight React + Vite app for inspecting GitHub user profiles and top repositories.
 
-Currently, two official plugins are available:
+Built with:
+- React 19
+- Vite 4+ for fast development and optimized builds
+- Axios for GitHub API requests
+- React Icons for clean UI indicators
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+Enter a GitHub username and the app will fetch:
+- public user profile details
+- avatar, bio, followers, following, location, company, and Twitter handle
+- top 6 repositories by star count
+- recent searches stored locally for quick recall
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- GitHub user lookup with debounced search input
+- Top repositories preview with stars, forks, language, and description
+- Search history persisted in `localStorage`
+- Error state when a username is not found
+- Responsive card-style layout and icon-driven UI
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting started
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run locally
+
+```bash
+npm run dev
+```
+
+Open the local Vite URL shown in the terminal (usually `http://localhost:5173`).
+
+### Build for production
+
+```bash
+npm run build
+```
+
+### Preview the production build
+
+```bash
+npm run preview
+```
+
+### Lint the project
+
+```bash
+npm run lint
+```
+
+## Project structure
+
+- `src/App.jsx` — root component
+- `src/components/github.jsx` — GitHub search UI and API logic
+- `src/components/github.css` — styling for the search app
+- `src/main.jsx` — app entry point
+- `vite.config.js` — Vite configuration
+
+## Notes
+
+- This app uses the GitHub public API, so rate limiting may apply for large numbers of requests.
+- The search field supports pressing Enter to query the current username.
+- Search history persists across refreshes using `localStorage`.

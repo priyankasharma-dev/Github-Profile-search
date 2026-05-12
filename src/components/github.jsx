@@ -18,7 +18,7 @@ function Github() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query)
-    }, 500)
+    }, 400)
     return () => clearTimeout(timer)
   }, [query])
 
@@ -77,7 +77,7 @@ function Github() {
 
       {error && (
         <div className="error-card">
-        <FaExclamationCircle className="error-icon" />
+          <FaExclamationCircle className="error-icon" />
           <p className="error-title">No user found</p>
           <p className="error-subtext">
             Try checking the username or search another one.
